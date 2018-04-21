@@ -9,13 +9,13 @@ class Word {
         return ''.concat(...this.ltrArray.map(ele => ele.showChar()));
     };
     matchWord(str) {
-        let checkVal = false;
+        let currCheckVal = false;
         this.ltrArray.forEach(function(ele) {
             if(ele.matchCheck(str)) {
-                checkVal = true;
-            }
+                currCheckVal = true;
+            };
         });
-        return checkVal;
+        return currCheckVal;
     };
 };
 

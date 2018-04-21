@@ -3,8 +3,7 @@ var inquirer = require('inquirer');
 
 var playerName = '';
 
-var wordBasic = ['tree', 'human'];
-// var wordBasic = ['tree', 'boat', 'human', 'baby', 'moon'];
+var wordBasic = ['tree', 'boat', 'human', 'baby', 'moon', 'Android'];
 var wordChallenge = ['fortlee','darkknight','mitsubishi','metuchen','philadelphia'];
 
 var wordPool = [];
@@ -58,7 +57,7 @@ function initGame() {
     gameon();
 };
 
-function singleGuess(obj,num) {
+function singleGuess(wordObj,num,wordStr) {
     inquirer.prompt([
         {
             type:'input',
@@ -66,21 +65,27 @@ function singleGuess(obj,num) {
             name: 'letterGuessed'
         }
     ]).then(ans => {
-        if(obj.matchWord(ans.letterGuessed)){
+        if(wordObj.matchWord(ans.letterGuessed)){
             console.log('\n CORRECT!! \n');
-            console.log(obj.showWord());
+            console.log(wordObj.showWord());
         } else {
             num--;
             lineBreaker();
             console.log('\n INCORRECT!!')
-            console.log('\n You have ' + num + ' guesses left! \n')
-            console.log(obj.showWord());
-        }
-        if(num ===0) {
-            
-        }
-        if(num>0) {
-            singleGuess(obj,num);
+            if(num >0) {
+                console.log('\n You have ' + num + ' guesses left! \n')
+                console.log(wordObj.showWord()+'\n');
+            } else if (num === 0 ) {
+                console.log('\n Run out of luck!! Let\'s guess the next word!! \n');
+                wordPool.push(wordStr);
+                gameon();
+            }
+        };
+        if(wordObj.showWord().split(' ').indexOf('_') === -1) {
+            console.log('\n You got it right!! Let\'s guess the next word!! \n')
+            gameon();
+        } else if (num>0) {
+            singleGuess(wordObj,num,wordStr); 
         };
     }); 
 };
@@ -93,9 +98,9 @@ function gameon() {
         var numGuess = maxGuessNum;
         console.log(currWord.showWord());
         wordPool.splice(index,1);
-        singleGuess(currWord,numGuess);
+        singleGuess(currWord,numGuess,wordBeingGuess);
     } else {
-        console.log('Congrats! all words have been guessed!')
+        console.log('Congrats!! all words have been guessed!!');
     };
 };
 
